@@ -7,6 +7,21 @@ notes_win.setWindowTitle("Smart notes")
 list_notes = QListWidget()
 list_notes_label = QLabel("List of notes")
 
+notes = {
+    
+    "welcoming": {
+        "text" : "Welcome to the smart notes app",
+        "tags" : ["begin", "welcome"]
+    },
+    "note1": {
+        "text" : "Salut.Scrie ceva",
+        "tags" : ["scris","salut"]
+    }
+}
+
+with open("notes.json", "w") as file:
+    json.dump(notes,file,ensure_ascii=False)
+
 button_note_create = QPushButton("Create note")
 button_note_del = QPushButton("Delete note")
 button_note_save = QPushButton("Save note")
@@ -51,6 +66,15 @@ col_2.addLayout(row_4)
 layout_notes.addLayout(col_1, stretch=2)
 layout_notes.addLayout(col_2, stretch=1)
 notes_win.setLayout(layout_notes)
+
+def show_notes():
+    key = list_notes.selectedItems()[0].text()
+    field_text.setText(notes[key]["text"])
+    list_tag.clear()
+    list_tag.addItems(notes[key]["tags"])
+
+list_notes.itemClicked.connect(show_notes)
+list_notes.addItems(notes)
 
 notes_win.show()
 app.exec()
