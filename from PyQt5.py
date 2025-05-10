@@ -1,5 +1,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QListWidget, QLineEdit, QTextEdit, QInputDialog, QHBoxLayout, QVBoxLayout, QFormLayout
+import json
+
 
 app = QApplication([])
 notes_win = QWidget()
@@ -21,6 +23,7 @@ notes = {
 
 with open("notes.json", "w") as file:
     json.dump(notes,file,ensure_ascii=False)
+
 
 button_note_create = QPushButton("Create note")
 button_note_del = QPushButton("Delete note")
@@ -67,6 +70,7 @@ layout_notes.addLayout(col_1, stretch=2)
 layout_notes.addLayout(col_2, stretch=1)
 notes_win.setLayout(layout_notes)
 
+
 def show_notes():
     key = list_notes.selectedItems()[0].text()
     field_text.setText(notes[key]["text"])
@@ -75,6 +79,27 @@ def show_notes():
 
 list_notes.itemClicked.connect(show_notes)
 list_notes.addItems(notes)
+
+def add_note():
+    note_name,ok = QInputDialog.getText(notes_win, "Add note", "Note name")
+    if ok and note_name != "":
+        notes[note_name] = {"text" :"","tags" : []}
+        list_notes.addItems(note_name)
+        list_tag.addItems(notes[note_name]["tags"])
+        print(notes)
+
+def del_note():
+    
+
+def save_note():
+    if list_notes.selectedItems():
+        key = list_notes.selectedItems()[0].text()
+        notes[key]["text"] = field_text.toPlainText()
+        with open("notes.json", "w")as file:
+            json.dump(notes,file,sort_keys = True, ensure_ascii= False)
+        print(notes)
+    else:
+        print("Note to save is not selected!")
 
 notes_win.show()
 app.exec()
