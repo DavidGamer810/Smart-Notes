@@ -96,6 +96,13 @@ def add_note():
         list_notes.addItem(note_name)
         save_to_file()
 
+def add_tag():
+    tag_name, ok = QInputDialog.getText(notes_win, "Add tag", "Tag name")
+    if ok and tag_name != "":
+        notes[tag_name] = {"text": [], "tags": ""}
+        list_notes.addItem(list_tags_label)
+        save_to_file()
+
 def del_note():
     if list_notes.selectedItems():
         key = list_notes.selectedItems()[0].text()
@@ -123,6 +130,8 @@ list_notes.addItems(notes.keys())
 button_note_create.clicked.connect(add_note)
 button_note_del.clicked.connect(del_note)
 button_note_save.clicked.connect(save_note)
+button_add.clicked.connect(add_tag)
+
 
 
 notes_win.show()
